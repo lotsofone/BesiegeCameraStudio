@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Modding;
+using UnityEngine.SceneManagement;
 
 namespace CameraStudio
 {
-    //v0.3.2
+    //v0.3.3
     abstract class SafeUIBehaviour : MonoBehaviour
     {
         public Rect windowRect;
@@ -50,6 +51,20 @@ namespace CameraStudio
                 if (background.activeSelf)
                     background.SetActive(false);
             }
+        }
+        public bool IsPlaying()
+        {
+            List<string> scene = new List<string> { "INITIALISER", "TITLE SCREEN", "LevelSelect", "LevelSelect1", "LevelSelect2", "LevelSelect3" };
+
+            if (SceneManager.GetActiveScene().isLoaded)
+            {
+
+                if (scene.Exists(match => match == SceneManager.GetActiveScene().name))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         protected virtual void OnDisable()
         {

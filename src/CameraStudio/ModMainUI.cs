@@ -12,6 +12,7 @@ namespace CameraStudio
     {
         //private readonly int windowID = ModUtility.GetWindowId();
         //public Rect windowRect = new Rect(300, 700, 100, 50);
+        public static readonly string dataKey = "lto_ReCam";
         private List<ReCamKey> frames = new List<ReCamKey>();
         private readonly Texture2D selectedTexture = new Texture2D(8, 32);
         protected override void Awake()
@@ -47,8 +48,8 @@ namespace CameraStudio
             if (!syncWithMachine) return;
             this.frames.Clear();
             if (info.MachineData == null) return;
-            if (info.MachineData.Read("lto_ReCam") == null) return;
-            string loadString = info.MachineData.ReadString("lto_ReCam");
+            if (info.MachineData.Read(dataKey) == null) return;
+            string loadString = info.MachineData.ReadString(dataKey);
             if (loadString == null) return;
             string[] strs = loadString.Split('|');
             foreach (var str in strs)
@@ -72,11 +73,11 @@ namespace CameraStudio
                 sb.Remove(sb.Length - 1, 1);
             if (sb.Length > 0)
             {
-                info.MachineData.Write("lto_ReCam", sb.ToString());
+                info.MachineData.Write(dataKey, sb.ToString());
             }
             else
             {
-                info.MachineData.Remove("lto_Recam");
+                info.MachineData.Remove(dataKey);
             }
         }
 
@@ -112,7 +113,7 @@ namespace CameraStudio
                 frames[i].GenerateDerivatives(left, right);
             }
         }
-        public override bool ShouldShowGUI() { return !StatMaster.hudHidden && !StatMaster.levelSimulating; }
+        public override bool ShouldShowGUI() { return !StatMaster.hudHidden && IsPlaying() && !StatMaster.levelSimulating; }
 
         readonly int timeLineWidth = 1200;
         float timeLimeScrollX;
